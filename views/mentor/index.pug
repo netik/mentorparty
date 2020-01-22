@@ -1,0 +1,53 @@
+extends ../layout
+
+block content
+  .pb-2.mt-2.mb-4.border-bottom
+    if messages.errors
+      .alert.alert-danger.fade.in
+        for error in messages.errors
+          div= error.msg
+
+    h3 Mentors
+    if mentors.length == 0
+        p No mentors. Add some!
+        hr
+    else
+        table.table.table.table-striped.table-bordered
+             th Name
+             th Company
+             th Bio
+             th Active? 
+             th
+
+             each item in mentors
+                tr
+                    td #{item.name}
+                    td #{item.company}
+                    td #{item.bio}
+                    td #{item.active}
+                    td
+                      form(method='POST', action="/mentors/delete")
+                       input(type='hidden', name='_csrf', value=_csrf)
+                       input(type='hidden', name='_id', value=item._id)
+                       div.form-group
+                         - var delname = "delete-" + item._id;
+                         input#submit.btn.btn-danger(type='submit', name=delname, value='Delete')
+
+    h3 Create Mentor
+    form(method='POST' action='/mentors')
+      input(type='hidden', name='_csrf', value=_csrf)
+      div.form-group
+        label(for='name') Name
+        input#name.form-control(type='text', placeholder='My Event' name='name')
+      div.form-group
+        label(for='company') Company
+        input#company.form-control(type='text', placeholder='Foo, Inc.' name='company')
+      div.form-group
+        label(for='bio') Bio
+        input#bio.form-control(type='text', placeholder='I do stuff!' name='bio')
+      div.form-group
+        label(for='active') Active
+        input#bio.form-control(type='checkbox', placeholder='I do stuff!' name='active')
+
+      div.form-group
+        input#submit.btn.btn-primary(type='submit', name='submit')

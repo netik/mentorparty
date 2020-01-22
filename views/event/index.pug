@@ -1,0 +1,54 @@
+extends ../layout
+
+block content
+  .pb-2.mt-2.mb-4.border-bottom
+    if messages.errors
+      .alert.alert-danger.fade.in
+        for error in messages.errors
+          div= error.msg
+      
+    h3 Events
+    if events.length == 0
+        p No events. Add some!
+        hr
+    else
+        table.table.table.table-striped.table-bordered
+             th Date
+             th Title
+             th Shortcode
+             th Location
+             th Created 
+             th
+
+             each item in events
+                tr
+                    td #{item.startsAt}
+                    td #{item.title}
+                    td #{item.shortCode}
+                    td #{item.location}
+                    td #{item.createdAt}
+                    td
+                      form(method='POST', action="/events/delete")
+                       input(type='hidden', name='_csrf', value=_csrf)
+                       input(type='hidden', name='_id', value=item._id)
+                       div.form-group
+                         - var delname = "delete-" + item._id;
+                         input#submit.btn.btn-danger(type='submit', name=delname, value='Delete')
+
+    h3 Create Event
+    form(method='POST' action='/events')
+      input(type='hidden', name='_csrf', value=_csrf)
+      div.form-group
+        label(for='name') Title
+        input#name.form-control(type='text', placeholder='My Event' name='title')
+      div.form-group
+        label(for='shortcode') Short code (available at https://memberparty.com/go/shortcode)
+        input#shortcode.form-control(type='text', placeholder='myevent' name='shortcode')
+      div.form-group
+        label(for='location') Location
+        input#location.form-control(type='text', placeholder='Some Venue' name='location')
+      div.form-group
+        label(for='startsat') Starts At
+        input#startsat.form-control(type='datetime-local', name='startsat')
+      div.form-group
+        input#submit.btn.btn-primary(type='submit', name='submit')
