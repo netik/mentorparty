@@ -43,4 +43,4 @@ exports.deleteEvent = (req, res) => {
 
 // add a name to a slot
 
-// display an event with slots
+// display an event with slots -- want realtime updating here
