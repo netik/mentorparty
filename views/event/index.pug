@@ -1,5 +1,4 @@
 extends ../layout
-
 block content
   .pb-2.mt-2.mb-4.border-bottom
     if messages.errors
@@ -8,33 +7,44 @@ block content
           div= error.msg
       
     h3 Events
+
     if events.length == 0
         p No events. Add some!
         hr
     else
         table.table.table.table-striped.table-bordered
-             th Date
+             th Created 
+             th Event Starts At
              th Title
              th Shortcode
              th Location
-             th Created 
              th
 
              each item in events
                 tr
-                    td #{item.startsAt}
+                    td #{moment(item.createdAt).format('lll')}<br>#{moment(item.createdAt).fromNow()}
+                    td #{moment(item.startsAt).format('lll')}<br>#{moment(item.startsAt).fromNow()}
                     td #{item.title}
                     td #{item.shortCode}
                     td #{item.location}
-                    td #{item.createdAt}
                     td
                       form(method='POST', action="/events/delete")
                        input(type='hidden', name='_csrf', value=_csrf)
                        input(type='hidden', name='_id', value=item._id)
                        div.form-group
-                         - var delname = "delete-" + item._id;
-                         input#submit.btn.btn-danger(type='submit', name=delname, value='Delete')
-
+                         - var delname = "delete-" + item._id
+                         - var subid = "submit-" + item._id
+                         - var slotlink = "/events/" + item._id + "/slots"
+                         - var mentorlink = "/events/" + item._id + "/mentors"
+                         input.btn.btn-danger(id=delname, type='submit', name=delname, value='Delete')
+                      form(method='GET', action=slotlink)
+                       input(type='hidden', name='_id', value=item._id)
+                       div.form-group
+                         input.btn.btn-success(id=subid, type='submit', name=subid, value='Manage Slots')
+                      form(method='GET', action=mentorlink)
+                       input(type='hidden', name='_id', value=item._id)
+                       div.form-group
+                         input.btn.btn-success(id=subid, type='submit', name=subid, value='Manage Mentors')
     h3 Create Event
     form(method='POST' action='/events')
       input(type='hidden', name='_csrf', value=_csrf)

@@ -33,3 +33,11 @@ html
       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
       ga('create', 'UA-XXXXX-X', 'auto');
       ga('send', 'pageview');
+
+    script.
+      function selectAll() {
+        $('input:checkbox').prop('checked', true);    
+      }
+      function selectNone() {
+        $('input:checkbox').prop('checked', false);    
+      }

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+/* The table of events */
 const eventSchema = new mongoose.Schema({
   startsAt: Date,
   title: String,

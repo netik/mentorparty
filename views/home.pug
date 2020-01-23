@@ -9,7 +9,9 @@ block content
       h2 Have an event code?
       p Enter your event code below and hit "Go".
       p You do not need to create an account to join an event.
-        
+
+  .row
+    .col-md-3
       form(method='POST' action='/go')
         input(type='hidden', name='_csrf', value=_csrf)
         div.form-group

@@ -37,10 +37,6 @@ exports.deleteEvent = (req, res) => {
 
 // TODO:
 
-// create slots in an event (i.e. 8:00, 8:35, etc...)
-
-// add mentor(s) to event
-
 // add a name to a slot
 
 // display an event with slots -- want realtime updating here
