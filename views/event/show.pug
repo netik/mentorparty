@@ -1,0 +1,28 @@
+
+extends ../layout
+
+block content
+  .pb-2.mt-2.mb-4.border-bottom
+    if messages.errors
+      .alert.alert-danger.fade.in
+        for error in messages.errors
+          div= error.msg
+
+    if event
+      h3 #{event.title}
+      p #{moment(event.startsAt).format('lll')}<br/>#{event.location}
+      hr
+      table#table.table.table-striped.table-bordered
+        thead.thead-dark
+          th Mentor
+          for item in slots
+            // top bar with slot times
+            th #{moment(item.startsAt).format('h:MM A')} <br> #{item.title}
+        for mentor in eventmentors
+          tr
+            td 
+              b #{mentor.mentorID.name}
+            for item in slots
+              td ---
+
+

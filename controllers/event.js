@@ -1,4 +1,7 @@
 const Events = require('../models/Event');
+const EventMentors = require('../models/EventMentor');
+const Slots = require('../models/Slot');
+
 /**
  * GET /events/index
  * Home page.
@@ -8,6 +11,47 @@ exports.showEvents = (req, res) => {
   Events.find((err, result) => {
     res.render('event/index', { title: 'Events', events: result });
   });
+};
+
+exports.jumpToEvent = (req, res) => {
+  const shortcode = req.params.shortcode ? req.params.shortcode : req.body.code;
+  console.log(shortcode);
+
+  Events.findOne({ shortCode: shortcode })
+    .then((event) => {
+      if (!event) {
+        req.flash('errors', { msg: 'Event not found' });
+        res.redirect('/');
+        return;
+      }
+
+      res.redirect(`/events/${event._id}/show`);
+    });
+};
+
+exports.showEvent = async (req, res) => {
+  const eventID = req.params.event_id;
+
+  Events.findById(eventID)
+    .then((event) => {
+      Slots.find({ event: event._id })
+        .then((slots) => {
+          EventMentors.find({ eventID: event._id })
+            .populate('mentorID')
+            .then((eventmentors) => {
+              res.render('event/show', {
+                title: `Event - ${event.title}`,
+                event,
+                eventmentors,
+                slots
+              });
+            });
+        });
+    })
+    .catch(() => {
+      req.flash('errors', { msg: 'Event not found' });
+      res.render('event/show', { title: `Event not found` });
+    });
 };
 
 exports.createEvent = (req, res) => {

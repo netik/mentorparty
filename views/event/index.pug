@@ -24,7 +24,9 @@ block content
                 tr
                     td #{moment(item.createdAt).format('lll')}<br>#{moment(item.createdAt).fromNow()}
                     td #{moment(item.startsAt).format('lll')}<br>#{moment(item.startsAt).fromNow()}
-                    td #{item.title}
+                    td 
+                      - var showlink = "/events/" + item._id + "/show"
+                      a(href=showlink) #{item.title}
                     td #{item.shortCode}
                     td #{item.location}
                     td

@@ -151,13 +151,17 @@ app.post('/account/password', passportConfig.isAuthenticated, userController.pos
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
 
-//app.get('/go/:shortcode', eventController.showEvent);
-//app.get('/go/:shortcode', eventController.showEvent);
 
 /* Events */
 app.get('/events', eventController.showEvents);
 app.post('/events', eventController.createEvent);
 app.post('/events/delete', eventController.deleteEvent);
+app.get('/events/:event_id/show', eventController.showEvent);
+
+// go from a link
+app.get('/go/:shortcode', eventController.jumpToEvent);
+// go from a post
+app.post('/go', eventController.jumpToEvent);
 
 /* Mentors */
 app.get('/events/:event_id/mentors', mentorController.showEventMentors);
