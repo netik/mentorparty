@@ -52,13 +52,22 @@ exports.showEventMentors = async (req, res) => {
     return;
   }
   const allMentors = await Mentors.find();
-  const eventMentors = await EventMentors.find({ event: eventID });
+  const eventMentors = await EventMentors.find({ eventID });
 
+  console.log(eventMentors);
   res.render('event/mentors', {
     title: `Event Mentors - ${eventResult.title}`,
     event: eventResult,
     mentors: allMentors,
-    eventMentors
+    eventMentors,
+    isMentorChecked: (mentorID) => { // we have a helper function here to search the array.
+      for (let i = 0; i < eventMentors.length; i++) {
+        if (String(eventMentors[i].mentorID) === String(mentorID)) {
+          return true;
+        }
+      }
+      return false;
+    }
   });
 };
 
@@ -74,12 +83,10 @@ exports.replaceMentors = async (req,res) => {
   }
 
   // first delete all of the mentors for this event
-  EventMentors.deleteMany({ event_id: eventID })
+  EventMentors.deleteMany({ eventID })
     .then(() => {
       // now, for each key in the document, if it's a mentor key, turn it on.
       Object.keys(req.body).forEach((key) => {
-        console.log(key, req.body[key]);
-
         if (key.startsWith('mentor-') && req.body[key] === 'on') {
           const mentorID = key.replace('mentor-', '');
 
@@ -89,8 +96,12 @@ exports.replaceMentors = async (req,res) => {
             eventID,
             mentorID
           });
+          console.log('saving');
+          console.log(myEM);
 
-          myEM.save();
+          myEM.save((err) => {
+            req.flash('error', { msg: `error during save - ${err}` });
+          });
         }
       });
     });

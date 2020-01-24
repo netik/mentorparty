@@ -34,10 +34,13 @@ html
       ga('create', 'UA-XXXXX-X', 'auto');
       ga('send', 'pageview');
 
+
     script.
+      /* eslint-env jquery, browser */
       function selectAll() {
         $('input:checkbox').prop('checked', true);    
       }
+
       function selectNone() {
         $('input:checkbox').prop('checked', false);    
       }

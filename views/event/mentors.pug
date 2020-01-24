@@ -19,7 +19,7 @@ block content
         button.btn.btn-primary(type="button", name="selectNone" , onclick="selectNone()") Select None
 
     - var formAction = `/events/${event._id}/mentors`
-
+ 
     form(method='POST' action=formAction)
       input(type='hidden', name='_csrf', value=_csrf)
       input(type='hidden', name='event_id', value=event._id)
@@ -28,7 +28,7 @@ block content
         div.form-check
           - var mentorID = "mentor-" + item._id
           - var mentorLabel = "label-mentor-" + item._id
-          input(type="checkbox", name=mentorID, checked=false, class="form-check-input")
+          input(type="checkbox", name=mentorID, checked=isMentorChecked(item._id), class="form-check-input")
           label(id=mentorLabel, for=mentorID) #{item.name}
 
       input#btn.btn-success(type="submit", name="Save", value="Save")
