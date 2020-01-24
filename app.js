@@ -92,6 +92,23 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+
+// admin check
+function isAdmin(req, res, next) {
+  // if user is authenticated in the session, carry on
+  if (req.isAuthenticated()) {
+    if (req.user.isAdmin) {
+      return next();
+    }
+  }
+
+  // if they aren't redirect them to the home page
+  req.flash('errors', { msg: 'Access denied.' });
+  res.redirect('/');
+}
+
+// start handler methods here
+
 app.use((req, res, next) => {
   if (req.path === '/api/upload') {
     // Multer multipart/form-data handling needs to occur before the Lusca CSRF check.
@@ -153,9 +170,9 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 
 
 /* Events */
-app.get('/events', eventController.showEvents);
-app.post('/events', eventController.createEvent);
-app.post('/events/delete', eventController.deleteEvent);
+app.get('/events', isAdmin, eventController.showEvents);
+app.post('/events', isAdmin, eventController.createEvent);
+app.post('/events/delete', isAdmin, eventController.deleteEvent);
 app.get('/events/:event_id/show', eventController.showEvent);
 
 // go from a link
@@ -164,16 +181,16 @@ app.get('/go/:shortcode', eventController.jumpToEvent);
 app.post('/go', eventController.jumpToEvent);
 
 /* Mentors */
-app.get('/events/:event_id/mentors', mentorController.showEventMentors);
-app.post('/events/:event_id/mentors', mentorController.replaceMentors);
-app.get('/mentors', mentorController.showMentors);
-app.post('/mentors', mentorController.createMentor);
-app.post('/mentors/delete', mentorController.deleteMentor);
+app.get('/events/:event_id/mentors', isAdmin, mentorController.showEventMentors);
+app.post('/events/:event_id/mentors', isAdmin, mentorController.replaceMentors);
+app.get('/mentors', isAdmin, mentorController.showMentors);
+app.post('/mentors', isAdmin, mentorController.createMentor);
+app.post('/mentors/delete', isAdmin, mentorController.deleteMentor);
 
 /* Slots */
-app.get('/events/:event_id/slots', slotController.showEventSlots);
-app.post('/slots', slotController.createSlot);
-app.post('/slots/delete', slotController.deleteSlot);
+app.get('/events/:event_id/slots', isAdmin, slotController.showEventSlots);
+app.post('/slots', isAdmin, slotController.createSlot);
+app.post('/slots/delete', isAdmin, slotController.deleteSlot);
 
 /**
  * API examples routes.

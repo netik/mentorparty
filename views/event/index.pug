@@ -22,8 +22,8 @@ block content
 
              each item in events
                 tr
-                    td #{moment(item.createdAt).format('lll')}<br>#{moment(item.createdAt).fromNow()}
-                    td #{moment(item.startsAt).format('lll')}<br>#{moment(item.startsAt).fromNow()}
+                    td #{moment(item.createdAt).format('lll')}<br>(#{moment(item.createdAt).fromNow()})
+                    td #{moment(item.startsAt).format('lll')}<br>(#{moment(item.startsAt).fromNow()})
                     td 
                       - var showlink = "/events/" + item._id + "/show"
                       a(href=showlink) #{item.title}
