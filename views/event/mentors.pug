@@ -1,0 +1,36 @@
+
+extends ../layout
+
+block content
+  .pb-2.mt-2.mb-4.border-bottom
+    if messages.errors
+      .alert.alert-danger.fade.in
+        for error in messages.errors
+          div= error.msg
+
+    h3 Mentors for Event: #{event.title}
+    p #{moment(event.startsAt).format('lll')}<br/>#{event.location}
+    hr
+
+    div.btn-toolbar.mb-3.btn-group-sm
+      div.btn-group.mr-2.btn-group-sm
+        button.btn.btn-primary(type="button", name="selectAll", onclick="selectAll()" ) Select All
+      div.btn-group.mr-2.btn-group-sm
+        button.btn.btn-primary(type="button", name="selectNone" , onclick="selectNone()") Select None
+
+    - var formAction = `/events/${event._id}/mentors`
+
+    form(method='POST' action=formAction)
+      input(type='hidden', name='_csrf', value=_csrf)
+      input(type='hidden', name='event_id', value=event._id)
+
+      for item in mentors
+        div.form-check
+          - var mentorID = "mentor-" + item._id
+          - var mentorLabel = "label-mentor-" + item._id
+          input(type="checkbox", name=mentorID, checked=false, class="form-check-input")
+          label(id=mentorLabel, for=mentorID) #{item.name}
+
+      input#btn.btn-success(type="submit", name="Save", value="Save")
+
+        

@@ -1,0 +1,73 @@
+extends ../layout
+block content
+  .pb-2.mt-2.mb-4.border-bottom
+    if messages.errors
+      .alert.alert-danger.fade.in
+        for error in messages.errors
+          div= error.msg
+
+    h3 Event: #{event.title}
+    p #{moment(event.startsAt).format('lll')}<br/>#{event.location}
+    hr
+
+    if slots.length == 0
+        p No slots. Add some!
+        hr
+    else
+        table.table.table.table-striped.table-bordered
+             th Slot Time
+             th Title
+             th Not Before
+             th Not After
+             th 
+             each item in slots
+                tr
+                    td #{moment(item.startsAt).format('lll')}
+                    td #{item.title}
+                    if item.notBefore
+                      td #{moment(item.notBefore).format('lll')}
+                    else
+                      td 
+                        i No restriction
+                    if item.notAfter
+                      td #{moment(item.notAfter).format('lll')}
+                    else
+                      td 
+                        i No restriction
+                    td
+                      form(method='POST', action="/slots/delete")
+                       input(type='hidden', name='_csrf', value=_csrf)
+                       input(type='hidden', name='_id', value=item._id)
+                       input(type='hidden', name='event_id', value=event._id)
+                       div.form-group
+                         - var delname = "delete-" + item._id
+                         input.btn.btn-danger(type='submit', id=delname, name=delname, value='Delete')
+
+    h3 Add Slot
+
+    p Slots are shared meeting times during an event. Users can sign up for slots, and mentors are allocated to slots. 
+    
+    form(method='POST' action='/slots')
+      input(type='hidden', name='_csrf', value=_csrf)
+      input(type='hidden', name='event_id', value=event._id)
+
+      div.form-group
+        label(for='startsat') Starts At
+        input#startsat.form-control(type='datetime-local', name='startsat', value=moment(event.startsAt).format("YYYY-MM-DDTHH:mm:ss"), min=moment(event.startsAt).format("YYYY-MM-DDTHH:mm:ss"))
+
+      div.form-group
+        label(for='notbefore') Don't allow sign-ups before
+        input#notbefore.form-control(type='datetime-local', name='notbefore', value=moment(event.startsAt).format("YYYY-MM-DDTHH:mm:ss"), min=moment(event.startsAt).format("YYYY-MM-DDTHH:mm:ss"))
+
+      div.form-group
+        label(for='notafter') Don't allow sign-ups after
+        input#notafter.form-control(type='datetime-local', name='notafter', value)
+
+      div.form-group
+        label(for='title') Title / Track Name (optional)
+        input#name.form-control(type='text', placeholder='UI/UX Track' name='title')
+
+      div.form-group
+        input#submit.btn.btn-primary(type='submit', name='submit')
+
+

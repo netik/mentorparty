@@ -83,8 +83,8 @@ exports.replaceMentors = async (req,res) => {
         if (key.startsWith('mentor-') && req.body[key] === 'on') {
           const mentorID = key.replace('mentor-', '');
 
-          console.log("save " + key + " - " + eventID + " - " + mentorID);
-
+          // TODO: confirm that mentor actually exists or enforce DB
+          // restrictions here
           const myEM = new EventMentors({
             eventID,
             mentorID
