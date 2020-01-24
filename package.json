@@ -1,14 +1,15 @@
 {
-  "name": "hackathon-starter",
-  "version": "6.0.0",
-  "description": "A boilerplate for Node.js web applications",
+  "name": "mentorparty",
+  "version": "0.99",
+  "description": "Simple app to join mentors and mentees together, based on hackathon-starter.",
   "repository": {
     "type": "git",
     "url": "https://github.com/sahat/hackathon-starter.git"
   },
   "license": "MIT",
-  "author": "Sahat Yalkabov",
+  "author": "John Adams",
   "contributors": [
+    "John Adams (https://github.com/netik)",
     "Yashar Fakhari (https://github.com/YasharF)"
   ],
   "scripts": {
