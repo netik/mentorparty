@@ -33,11 +33,12 @@ exports.createMentor = (req, res) => {
 
 exports.deleteMentor = (req, res) => {
   Mentors.deleteOne({ _id: req.body._id })
-  .then(() => {
-    Mentors.find((err, result) => {
-      res.render('mentor/index', { title: 'Mentors', mentors: result });
+    .then(() => {
+      Mentors.find((err, result) => {
+        req.flash('info', { msg: 'Mentor removed.' });
+        res.render('mentor/index', { title: 'Mentors', mentors: result });
+      });
     });
-  });
 };
 
 exports.showEventMentors = async (req, res) => {
@@ -99,6 +100,7 @@ exports.replaceMentors = async (req,res) => {
           });
         }
       });
+      req.flash('info', { msg: 'Mentors for this event have been updated.' });
     });
   // then redirect back to the event page
   res.redirect(`/events/${eventID}/mentors`);
