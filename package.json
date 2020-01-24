@@ -1,6 +1,6 @@
 {
   "name": "mentorparty",
-  "version": "0.99",
+  "version": "1.0.0",
   "description": "Simple app to join mentors and mentees together, based on hackathon-starter.",
   "repository": {
     "type": "git",
