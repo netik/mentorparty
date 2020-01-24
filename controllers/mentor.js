@@ -14,7 +14,6 @@ exports.showMentors = (req, res) => {
 };
 
 exports.createMentor = (req, res) => {
-  console.log(req.body.active);
 
   const myMentor = new Mentors ({
     name: req.body.name,
@@ -54,7 +53,6 @@ exports.showEventMentors = async (req, res) => {
   const allMentors = await Mentors.find();
   const eventMentors = await EventMentors.find({ eventID });
 
-  console.log(eventMentors);
   res.render('event/mentors', {
     title: `Event Mentors - ${eventResult.title}`,
     event: eventResult,
@@ -96,9 +94,6 @@ exports.replaceMentors = async (req,res) => {
             eventID,
             mentorID
           });
-          console.log('saving');
-          console.log(myEM);
-
           myEM.save((err) => {
             req.flash('error', { msg: `error during save - ${err}` });
           });
