@@ -1,0 +1,37 @@
+extends ../layout
+
+block content
+  .pb-2.mt-2.mb-4.border-bottom
+    if messages.errors
+      .alert.alert-danger.fade.in
+        for error in messages.errors
+          div= error.msg
+
+    h3 Users
+    if users.length == 0
+        p No users. Add some!
+        hr
+    else
+        table.table.table.table-striped.table-bordered
+             th Email
+             th Name
+             th Location
+             th
+
+             each item in users
+                tr
+                    td #{item.email}
+                    td #{item.profile.name}
+                    td #{item.location}
+                    td
+                      form(method='POST', action="/users/delete")
+                       input(type='hidden', name='_csrf', value=_csrf)
+                       input(type='hidden', name='_id', value=item._id)
+                       - var editlink = "/users/" + item._id;
+                       div.form-group
+                         - var delname = "delete-" + item._id;
+                         input#submit.btn.btn-danger(type='submit', name=delname, value='Delete')
+                      form(method='GET', action=editlink)
+                       div.form-group
+                         - var delname = "edit-" + item._id;
+                         input#submit.btn.btn-info(type='submit', name=editname, value='Edit')

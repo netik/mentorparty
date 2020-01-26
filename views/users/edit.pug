@@ -1,0 +1,34 @@
+extends ../layout
+
+block content
+  .pb-2.mt-2.mb-4.border-bottom
+    if messages.errors
+      .alert.alert-danger.fade.in
+        for error in messages.errors
+          div= error.msg
+
+    h3 User edit
+    if !user.edit == 0
+        p Not found.
+        hr
+    else
+      - var updatelink = "/users/" + user._id 
+      form(method='POST' action=updatelink)
+        input(type='hidden', name='_csrf', value=_csrf)
+        div.form-group
+            label(for='email') Email
+            input#name.form-control(type='text', placeholder='user@example.com' name='email' value=user.email)            
+            label(for='name') Name
+            input#name.form-control(type='text', placeholder='Joe User' name='name' value=user.name)
+            label(for='gender') Gender
+            input#name.form-control(type='text', placeholder='Gender' name='gender' value=user.profile.gender)
+            label(for='location') Location
+            input#name.form-control(type='text', placeholder='Anytown, USA' name='location' value=user.profile.location)
+            label(for='website') Website
+            input#name.form-control(type='text', placeholder='http://foo.com' name='website' value=user.profile.website)
+            label(for='picture') Picture
+            input#name.form-control(type='text', placeholder='http://foo.com/image.jpg' name='picture' value=user.profile.picture)
+            label(for='isAdmin') Admin
+            input#isAdmin.form-control(type='checkbox', name='isAdmin', checked=user.isAdmin)
+        div.form-group
+            input#submit.btn.btn-primary(type='submit', name='submit')
