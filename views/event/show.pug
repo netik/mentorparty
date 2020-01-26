@@ -29,6 +29,7 @@ block content
             for slotItem in slots
               td
                 - var takeName = '#'
+                - var clearSlot = '#'
                 form(method='POST', action=`/event/${event._id}/takeslot`)
                   input(type='hidden', name='_csrf', value=_csrf)
                   input(type='hidden', name='event_id', value=event._id)
@@ -37,5 +38,8 @@ block content
 
                   div.form-group.text-center
                     input.btn.btn-success.btn-sm(type='submit', id=takeName, name=takeName, value='Available')
+                  if user
+                    if user.isAdmin
+                      input.btn.btn-info.btn-sm(type='submit', id=clearSlot, name=clearSlot, value='Clear Slot') 
 
 
