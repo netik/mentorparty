@@ -619,15 +619,13 @@ exports.updateUser = (req, res, next) => {
 };
 
 /**
- * POST /user/:id/delete
+ * POST /users/delete
  * admin: get a single user for editing
  */
 exports.deleteUser = (req, res) => {
   User.deleteOne({ _id: req.body._id })
     .then(() => {
-      User.find((err, result) => {
-        req.flash('info', { msg: 'User deleted' } );
-        res.redirect('/users');
-      });
+      req.flash('info', { msg: 'User deleted' } );
+      res.redirect('/users');
     });
 };

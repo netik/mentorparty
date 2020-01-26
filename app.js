@@ -168,8 +168,8 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 /* Users */
 app.get('/users', userController.showUsers);
 app.get('/users/:user_id', userController.showUser);
-app.post('/users/:user_id', userController.updateUser);
 app.post('/users/delete', userController.deleteUser);
+app.post('/users/:user_id', userController.updateUser);
 
 /* Events */
 app.get('/events', isAdmin, eventController.showEvents);
