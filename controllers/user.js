@@ -564,3 +564,70 @@ exports.postForgot = (req, res, next) => {
     .then(() => res.redirect('/forgot'))
     .catch(next);
 };
+
+/**
+ * GET /users
+ * admin: get a list of all users
+ */
+exports.showUsers = (req, res, next) => {
+  User
+    .find()
+    .then((users) => {
+      res.render('users/index', { users });
+    });
+};
+
+/**
+ * GET /user/:id
+ * admin: get a single user for editing
+ */
+exports.showUser = (req, res, next) => {
+  User
+    .findById(req.params.user_id)
+    .then((user) => {
+      res.render('users/edit', { user });
+    });
+};
+
+/**
+ * POST /user/:id
+ * admin: get a single user for editing
+ */
+exports.updateUser = (req, res, next) => {
+  User.findById(req.params.user_id, (err, user) => {
+    if (err) { return next(err); }
+    if (user.email !== req.body.email) user.emailVerified = false;
+    user.email = req.body.email || '';
+    user.profile.name = req.body.name || '';
+    user.profile.gender = req.body.gender || '';
+    user.profile.location = req.body.location || '';
+    user.profile.website = req.body.website || '';
+    user.isAdmin = req.body.isAdmin === 'on';
+
+    user.save((err) => {
+      if (err) {
+        if (err.code === 11000) {
+          req.flash('errors', { msg: 'The email address you have entered is already associated with an account.' });
+          return res.redirect('/users');
+        }
+        return next(err);
+      }
+      req.flash('success', { msg: 'Profile information has been updated.' });
+      res.redirect(`/users/${user._id}`);
+    });
+  });
+};
+
+/**
+ * POST /user/:id/delete
+ * admin: get a single user for editing
+ */
+exports.deleteUser = (req, res) => {
+  User.deleteOne({ _id: req.body._id })
+    .then(() => {
+      User.find((err, result) => {
+        req.flash('info', { msg: 'User deleted' } );
+        res.redirect('/users');
+      });
+    });
+};

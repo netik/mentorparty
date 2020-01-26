@@ -15,8 +15,6 @@ exports.showEvents = (req, res) => {
 
 exports.jumpToEvent = (req, res) => {
   const shortcode = req.params.shortcode ? req.params.shortcode : req.body.code;
-  console.log(shortcode);
-
   Events.findOne({ shortCode: shortcode })
     .then((event) => {
       if (!event) {
