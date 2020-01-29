@@ -191,6 +191,7 @@ app.post('/mentors/delete', isAdmin, mentorController.deleteMentor);
 
 /* Slots */
 app.get('/events/:event_id/slots', isAdmin, slotController.showEventSlots);
+app.post('/event/:event_id/takeslot', eventController.takeEventSlot);
 app.post('/slots', isAdmin, slotController.createSlot);
 app.post('/slots/delete', isAdmin, slotController.deleteSlot);
 

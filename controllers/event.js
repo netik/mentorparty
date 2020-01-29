@@ -78,7 +78,24 @@ exports.deleteEvent = (req, res) => {
 };
 
 // TODO:
+exports.takeEventSlot = (req, res) => {
+  // does the slot exist?
+  // does the mentor exist
+  console.log(req.body.mentor_id);
+  console.log(req.body.slot_id);
 
-// add a name to a slot
+  const mySlot = new Events({
+    event: req.body.event_id,
+    mentor: req.body.mentor_id,
+    user: req.user ? req.user._id : undefined,
+    takenBy: "Someone"
+  });
+
+  mySlot.save()
+    .then(() => {
+      req.flash('info', { msg: 'Signed up!' });
+      res.redirect('/events/' + req.body.event_id + '/show');
+    });
+};
 
 // display an event with slots -- want realtime updating here
