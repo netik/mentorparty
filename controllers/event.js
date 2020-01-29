@@ -2,6 +2,8 @@ const validator = require('validator');
 const Events = require('../models/Event');
 const EventMentors = require('../models/EventMentor');
 const Slots = require('../models/Slot');
+const SlotUser = require('../models/SlotUser');
+
 /**
  * GET /events/index
  * Home page.
@@ -32,23 +34,55 @@ exports.showEvent = async (req, res) => {
 
   Events.findById(eventID)
     .then((event) => {
-      Slots.find({ event: event._id })
-        .then((slots) => {
-          EventMentors.find({ eventID: event._id })
-            .populate('mentorID')
-            .then((eventmentors) => {
-              res.render('event/show', {
-                title: `Event - ${event.title}`,
-                event,
-                eventmentors,
-                slots
-              });
+      // Now that we've verified the events, if you don't have a name set,
+      // then let's get that first. we'll return you here when you're done.
+      if (!req.session.name && !req.user) {
+        req.session.returnTo = `/events/${event.id}/show`;
+        res.render('getname', { title: 'new party, who dis?' });
+        return;
+      }
+      SlotUser.find({ event: event._id })
+        .populate('user')
+        .then((slotusers) => {
+          Slots.find({ event: event._id })
+            .then((slots) => {
+              EventMentors.find({ eventID: event._id })
+                .populate('mentorID')
+                .then((eventmentors) => {
+                  res.render('event/show', {
+                    title: `Event - ${event.title}`,
+                    event,
+                    eventmentors,
+                    slots,
+                    slotusers,
+                    // we have a helper function here to search the array.
+                    isSlotTaken: (slotID, mentorID) => {
+                      for (let i = 0; i < slotusers.length; i++) {
+                        if ((String(slotusers[i].mentor) === String(mentorID))
+                            && (String(slotusers[i].slot) === String(slotID))) {
+                          return true;
+                        }
+                      }
+                      return false;
+                    },
+                    slotTakenBy: (slotID, mentorID) => {
+                      for (let i = 0; i < slotusers.length; i++) {
+                        if ((String(slotusers[i].mentor) === String(mentorID))
+                            && (String(slotusers[i].slot) === String(slotID))) {
+                          return slotusers[i].takenBy;
+                        }
+                      }
+                      return false;
+                    }
+                  });
+                });
             });
         });
     })
-    .catch(() => {
+    .catch((err) => {
+      console.log(err);
       req.flash('errors', { msg: 'Event not found' });
-      res.render('event/show', { title: `Event not found` });
+      res.render('event/show', { title: 'Event not found' });
     });
 };
 
@@ -88,18 +122,15 @@ exports.deleteEvent = (req, res) => {
     });
 };
 
-// TODO:
 exports.takeEventSlot = (req, res) => {
   // does the slot exist?
   // does the mentor exist
-  console.log(req.body.mentor_id);
-  console.log(req.body.slot_id);
-
-  const mySlot = new Events({
+  const mySlot = new SlotUser({
     event: req.body.event_id,
     mentor: req.body.mentor_id,
+    slot: req.body.slot_id,
     user: req.user ? req.user._id : undefined,
-    takenBy: "Someone"
+    takenBy: req.session.name || req.user.profile.name || req.user.email
   });
 
   mySlot.save()
@@ -109,4 +140,13 @@ exports.takeEventSlot = (req, res) => {
     });
 };
 
-// display an event with slots -- want realtime updating here
+exports.releaseEventSlot = (req, res) => {
+  // does the slot exist?
+  // does the mentor exist
+
+  SlotUser.deleteOne({ slot: req.body.slot_id, mentor: req.body.mentor_id })
+    .then(() => {
+      req.flash('info', { msg: 'Signed up!' });
+      res.redirect('/events/' + req.body.event_id + '/show');
+    });
+};

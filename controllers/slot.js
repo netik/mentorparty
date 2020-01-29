@@ -52,7 +52,7 @@ exports.createSlot = (req, res) => {
       .catch(() => {
         // mild bug here, no other event can share the same time slot.
         // we really need a compound key or better search here.
-        req.flash('errors', { msg: 'That timeslot already exists.' });
+        req.flash('errors', { msg: 'That time slot already exists.' });
         res.redirect(`/events/${eventID}/slots`);
       });
   });

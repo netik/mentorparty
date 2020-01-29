@@ -654,3 +654,16 @@ exports.deleteUser = (req, res) => {
       res.redirect('/users');
     });
 };
+
+/**
+ * POST /users/setname
+ * set a (Guest) user's session name
+ */
+exports.setName = (req, res) => {
+  if (!req.body.name) {
+    req.flash('errors',{ msg: 'Name can\t be blank.' });
+    res.render('getname');
+  }
+  req.session.name = req.body.name;
+  res.redirect(req.session.returnTo);
+};

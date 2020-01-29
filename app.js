@@ -122,6 +122,7 @@ app.use(lusca.xssProtection(true));
 app.disable('x-powered-by');
 app.use((req, res, next) => {
   res.locals.user = req.user;
+  res.locals.session = req.session;
   next();
 });
 app.use((req, res, next) => {
@@ -171,6 +172,8 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 /* Users */
 app.get('/users', isAdmin, userController.showUsers);
 app.get('/users/:user_id', isAdmin, userController.showUser);
+
+app.post('/users/setname', userController.setName);
 app.post('/users/delete', isAdmin, userController.deleteUser);
 app.post('/users/:user_id', isAdmin, userController.updateUser);
 
@@ -195,6 +198,7 @@ app.post('/mentors/delete', isAdmin, mentorController.deleteMentor);
 /* Slots */
 app.get('/events/:event_id/slots', isAdmin, slotController.showEventSlots);
 app.post('/event/:event_id/takeslot', eventController.takeEventSlot);
+app.post('/event/:event_id/releaseslot', eventController.releaseEventSlot);
 app.post('/slots', isAdmin, slotController.createSlot);
 app.post('/slots/delete', isAdmin, slotController.deleteSlot);
 
