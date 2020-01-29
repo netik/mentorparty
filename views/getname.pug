@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  h1 MentorParty
+  p.lead A simple service for matching mentors and attendees at events.
+  hr
+  .row
+    .col-md-6
+      h2 What's your Name?
+
+  .row
+    .col-md-3
+      form(method='POST' action='/users/setname')
+        input(type='hidden', name='_csrf', value=_csrf)
+        div.form-group
+          label(for='name') Name
+          input#name.form-control(type='text', placeholder='' name='name')
+        div.form-group
+          input#submit.btn.btn-primary(type='submit', name='Next', value='Next')
