@@ -1,3 +1,4 @@
+const validator = require('validator');
 const Mentors = require('../models/Mentor');
 const Events = require('../models/Event');
 const EventMentors = require('../models/EventMentor');
@@ -14,13 +15,20 @@ exports.showMentors = (req, res) => {
 };
 
 exports.createMentor = (req, res) => {
+  const validationErrors = [];
+  if (!req.body.name || validator.isEmpty(req.body.name)) validationErrors.push({ msg: 'Name cannot be blank.' });
+
+  if (validationErrors.length) {
+    req.flash('errors', validationErrors);
+    return res.redirect('/mentors');
+  }
 
   const myMentor = new Mentors ({
     name: req.body.name,
     bio: req.body.bio,
     company: req.body.company,
     photoURL: req.body.photourl,
-    active: req.body.active === 'on'
+    active: true
   });
 
   myMentor.save()

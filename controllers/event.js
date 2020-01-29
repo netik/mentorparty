@@ -1,7 +1,7 @@
+const validator = require('validator');
 const Events = require('../models/Event');
 const EventMentors = require('../models/EventMentor');
 const Slots = require('../models/Slot');
-
 /**
  * GET /events/index
  * Home page.
@@ -53,6 +53,17 @@ exports.showEvent = async (req, res) => {
 };
 
 exports.createEvent = (req, res) => {
+
+  const validationErrors = [];
+  if (!req.body.title || validator.isEmpty(req.body.title)) validationErrors.push({ msg: 'Title cannot be blank.' });
+  if (!req.body.shortcode || validator.isEmpty(req.body.shortcode)) validationErrors.push({ msg: 'Short code cannot be blank.' });
+  if (!req.body.startsat || validator.isEmpty(req.body.startsat)) validationErrors.push({ msg: 'Starts at time cannot be blank.' });
+
+  if (validationErrors.length) {
+    req.flash('errors', validationErrors);
+    return res.redirect('/events');
+  }
+
   const myEvent = new Events({
     title: req.body.title,
     location: req.body.location,
