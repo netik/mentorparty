@@ -116,6 +116,10 @@ exports.createEvent = (req, res) => {
 exports.deleteEvent = (req, res) => {
   Events.deleteOne({ _id: req.body._id })
     .then(() => {
+      EventMentors.remove({ eventID: req.body._id }).exec();
+      Slots.remove({ event: req.body._id }).exec();
+      SlotUser.remove({ event: req.body._id }).exec();
+
       Events.find((err, result) => {
         res.render('event/index', { title: 'Events', events: result });
       });
@@ -135,7 +139,7 @@ exports.takeEventSlot = (req, res) => {
 
   mySlot.save()
     .then(() => {
-      req.flash('info', { msg: 'Signed up!' });
+      req.flash('success', { msg: 'Signed up!' });
       res.redirect(`/events/${req.body.event_id}/show`);
     });
 };
@@ -146,7 +150,7 @@ exports.releaseEventSlot = (req, res) => {
 
   SlotUser.deleteOne({ slot: req.body.slot_id, mentor: req.body.mentor_id })
     .then(() => {
-      req.flash('info', { msg: 'Signed up!' });
+      req.flash('success', { msg: 'Slot Released.' });
       res.redirect(`/events/${req.body.event_id}/show`);
     });
 };

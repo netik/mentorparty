@@ -2,6 +2,7 @@ const validator = require('validator');
 const Mentors = require('../models/Mentor');
 const Events = require('../models/Event');
 const EventMentors = require('../models/EventMentor');
+const SlotUsers = require('../models/SlotUser');
 
 /**
  * GET /events/index
@@ -34,6 +35,7 @@ exports.createMentor = (req, res) => {
   myMentor.save()
     .then(() => {
       Mentors.find((err, result) => {
+        req.flash('success', { msg: 'Mentor created.' });
         res.render('mentor/index', { title: 'Mentors', mentors: result });
       });
     });
@@ -42,8 +44,11 @@ exports.createMentor = (req, res) => {
 exports.deleteMentor = (req, res) => {
   Mentors.deleteOne({ _id: req.body._id })
     .then(() => {
+      EventMentors.remove({ mentorID: req.body._id }).exec();
+      SlotUsers.remove({ mentor: req.body._id }).exec();
+
       Mentors.find((err, result) => {
-        req.flash('info', { msg: 'Mentor removed.' });
+        req.flash('success', { msg: 'Mentor removed.' });
         res.render('mentor/index', { title: 'Mentors', mentors: result });
       });
     });
@@ -108,8 +113,8 @@ exports.replaceMentors = async (req,res) => {
           });
         }
       });
-      req.flash('info', { msg: 'Mentors for this event have been updated.' });
     });
   // then redirect back to the event page
+  req.flash('info', { msg: 'Mentors for this event have been updated.' });
   res.redirect(`/events/${eventID}/mentors`);
 };
