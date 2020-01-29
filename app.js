@@ -51,7 +51,10 @@ mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useUnifiedTopology', true);
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.MONGODB_URI, {
+    connectTimeoutMS: 5000 // 5 seconds max.
+});
+
 mongoose.connection.on('error', (err) => {
   console.error(err);
   console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
@@ -239,6 +242,13 @@ if (process.env.NODE_ENV === 'development') {
     res.status(500).send('Server Error');
   });
 }
+
+/**
+ * Before starting the express server, find out if there are any users. If there are not, make one.
+ * We do this in our code, because if we were in Heroku, we can't easily run scripts.
+ */
+
+userController.doInitialSetup();
 
 /**
  * Start Express server.

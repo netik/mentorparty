@@ -9,6 +9,34 @@ const User = require('../models/User');
 
 const randomBytesAsync = promisify(crypto.randomBytes);
 
+const defaultAdminUser = "admin@retina.net";
+
+/* generates a random 16 character hex string */
+const createRandomToken = randomBytesAsync(16)
+  .then((buf) => buf.toString('hex'));
+
+/* set up the initial admin user if necessary */
+exports.doInitialSetup = () => {
+  User.countDocuments({}, (err, c) => {
+    if (c === 0) {
+      // There are no users
+      createRandomToken
+        .then((pass) => { 
+          const user = new User({
+            email: defaultAdminUser,
+            isAdmin: true,
+            password: pass
+          });
+
+          user.save()
+            .then(() => {
+              console.log(`Initial Install: A new user has been created. Email: ${defaultAdminUser}, Pass: ${pass}`);
+            });
+        });
+    }
+  });
+};
+
 /**
  * GET /login
  * Login page.
@@ -316,9 +344,6 @@ exports.getVerifyEmail = (req, res, next) => {
     req.flash('errors', { msg: 'The email address is invalid or disposable and can not be verified.  Please update your email address and try again.' });
     return res.redirect('/account');
   }
-
-  const createRandomToken = randomBytesAsync(16)
-    .then((buf) => buf.toString('hex'));
 
   const setRandomToken = (token) => {
     User
