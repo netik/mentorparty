@@ -42,13 +42,16 @@ block content
                         div.form-group.text-center
                           input.btn.btn-info.btn-sm(type='submit', id=clearSlot, name=clearSlot, value='Clear Slot') 
                 else
-                  form(method='POST', action=`/event/${event._id}/takeslot`)
-                    input(type='hidden', name='_csrf', value=_csrf)
-                    input(type='hidden', name='event_id', value=event._id)
-                    input(type='hidden', name='slot_id', value=slotItem._id)
-                    input(type='hidden', name='mentor_id', value=mentor.mentorID._id)
+                  if isPastDate(slotItem.startsAt)
+                    form(method='POST', action=`/event/${event._id}/takeslot`)
+                      input(type='hidden', name='_csrf', value=_csrf)
+                      input(type='hidden', name='event_id', value=event._id)
+                      input(type='hidden', name='slot_id', value=slotItem._id)
+                      input(type='hidden', name='mentor_id', value=mentor.mentorID._id)
 
-                    div.form-group.text-center
-                      input.btn.btn-success.btn-sm(type='submit', id=takeName, name=takeName, value='Available')
-
+                      div.form-group.text-center
+                        input.btn.btn-success.btn-sm(type='submit', id=takeName, name=takeName, value='Available')
+                  else
+                     div 
+                      i Available after #{moment(slotItem.startsAt).format('h:MM A')}
 

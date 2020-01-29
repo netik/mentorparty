@@ -9,7 +9,7 @@ const User = require('../models/User');
 
 const randomBytesAsync = promisify(crypto.randomBytes);
 
-const defaultAdminUser = "admin@retina.net";
+const defaultAdminUser = 'admin@retina.net';
 
 /* generates a random 16 character hex string */
 const createRandomToken = randomBytesAsync(16)
@@ -598,7 +598,7 @@ exports.showUsers = (req, res, next) => {
   User
     .find()
     .then((users) => {
-      res.render('users/index', { users });
+      res.render('users/index', { title: 'Users', users });
     });
 };
 
@@ -661,8 +661,9 @@ exports.deleteUser = (req, res) => {
  */
 exports.setName = (req, res) => {
   if (!req.body.name) {
-    req.flash('errors',{ msg: 'Name can\t be blank.' });
+    req.flash('errors', { msg: 'Name can\t be blank.' });
     res.render('getname');
+    return;
   }
   req.session.name = req.body.name;
   res.redirect(req.session.returnTo);

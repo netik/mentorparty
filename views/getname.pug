@@ -13,7 +13,6 @@ block content
       form(method='POST' action='/users/setname')
         input(type='hidden', name='_csrf', value=_csrf)
         div.form-group
-          label(for='name') Name
           input#name.form-control(type='text', placeholder='' name='name')
         div.form-group
           input#submit.btn.btn-primary(type='submit', name='Next', value='Next')

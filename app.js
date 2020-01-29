@@ -52,7 +52,7 @@ mongoose.set('useCreateIndex', true);
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useUnifiedTopology', true);
 mongoose.connect(process.env.MONGODB_URI, {
-    connectTimeoutMS: 5000 // 5 seconds max.
+  connectTimeoutMS: 5000 // 5 seconds max.
 });
 
 mongoose.connection.on('error', (err) => {

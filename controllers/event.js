@@ -73,7 +73,8 @@ exports.showEvent = async (req, res) => {
                         }
                       }
                       return false;
-                    }
+                    },
+                    isPastDate: (d) => Date.now() >= d
                   });
                 });
             });
@@ -87,7 +88,6 @@ exports.showEvent = async (req, res) => {
 };
 
 exports.createEvent = (req, res) => {
-
   const validationErrors = [];
   if (!req.body.title || validator.isEmpty(req.body.title)) validationErrors.push({ msg: 'Title cannot be blank.' });
   if (!req.body.shortcode || validator.isEmpty(req.body.shortcode)) validationErrors.push({ msg: 'Short code cannot be blank.' });
@@ -136,7 +136,7 @@ exports.takeEventSlot = (req, res) => {
   mySlot.save()
     .then(() => {
       req.flash('info', { msg: 'Signed up!' });
-      res.redirect('/events/' + req.body.event_id + '/show');
+      res.redirect(`/events/${req.body.event_id}/show`);
     });
 };
 
@@ -147,6 +147,6 @@ exports.releaseEventSlot = (req, res) => {
   SlotUser.deleteOne({ slot: req.body.slot_id, mentor: req.body.mentor_id })
     .then(() => {
       req.flash('info', { msg: 'Signed up!' });
-      res.redirect('/events/' + req.body.event_id + '/show');
+      res.redirect(`/events/${req.body.event_id}/show`);
     });
 };
