@@ -74,7 +74,13 @@ exports.showEvent = async (req, res) => {
                       }
                       return false;
                     },
-                    isPastDate: (d) => Date.now() >= d
+                    isPastDate: (d) => {
+                      if (!d) {
+                        // if d is unset we don't care.
+                        return false;
+                      }
+                      return Date.now() >= d;
+                    }
                   });
                 });
             });
