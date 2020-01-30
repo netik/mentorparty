@@ -170,12 +170,12 @@ app.post('/account/delete', passportConfig.isAuthenticated, userController.postD
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
 
 /* Users */
-app.get('/users',  userController.showUsers);
-app.get('/users/:user_id', userController.showUser);
+app.get('/users', isAdmin, userController.showUsers);
+app.get('/users/:user_id', isAdmin, userController.showUser);
 
 app.post('/users/setname', userController.setName);
-app.post('/users/delete',  userController.deleteUser);
-app.post('/users/:user_id',  userController.updateUser);
+app.post('/users/delete', isAdmin, userController.deleteUser);
+app.post('/users/:user_id', isAdmin, userController.updateUser);
 
 /* Events */
 app.get('/events', isAdmin, eventController.showEvents);
