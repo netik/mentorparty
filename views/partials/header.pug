@@ -19,10 +19,10 @@
               a.nav-link(href='/events') Events
             li.nav-item(class=(title === 'Mentors') ? 'active' : undefined)
               a.nav-link(href='/mentors') Mentors
+            li.nav-item(class=(title === 'Status') ? 'active' : undefined)
+              a.nav-link(href='/status') Status
         li.nav-item(class=(title === 'Contact') ? 'active' : undefined)
           a.nav-link(href='/contact') Contact
-        li.nav-item(class=(title === 'Status') ? 'active' : undefined)
-          a.nav-link(href='/status') Status
       ul.nav.navbar-nav.ml-auto
         if !user
           li.nav-item(class=(title === 'Login') ? 'active' : undefined)
